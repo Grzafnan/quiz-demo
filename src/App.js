@@ -1,5 +1,7 @@
 import { useState } from "react";
 import "./App.css";
+import Progress from "./components/PrograssBar";
+
 
 const questions = [
   {
@@ -45,10 +47,14 @@ function App() {
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [wrongScore, setWrongScore] = useState(0)
 
   function handleAnswer(isCorrect) {
     if (isCorrect) {
       setScore(score + 1);
+    }
+    else {
+      setWrongScore(wrongScore + 1)
     }
 
     const nextQuestion = currentQuestion + 1;
@@ -59,38 +65,49 @@ function App() {
     }
   }
 
-  return (
-    <div className="app">
-      {showScore ? (
-        <div className="score-section">
-          Você pontuou {score} de {questions.length}
-        </div>
-      ) : (
-        <>
-          <div className="question-section">
-            <div className="question-count">
-              <span>Questão {currentQuestion + 1}</span>/{questions.length}
-            </div>
-            <div className="question-text">
-              {questions[currentQuestion].questionText}
-            </div>
-          </div>
 
-          <div className="answer-section">
-            {questions[currentQuestion].answerOptions.map(
-              (answerOption, index) => (
-                <button
-                  onClick={() => handleAnswer(answerOption.isCorrect)}
-                  key={index}
-                >
-                  {answerOption.answerText}
-                </button>
-              )
-            )}
+
+
+  return (
+    <section>
+      <Progress
+        score={score}
+        wrongScore={wrongScore}
+        length={questions?.length}
+      />
+      <div className="app">
+        {showScore ? (
+          <div className="score-section">
+            Você pontuou {score} de {questions.length}
           </div>
-        </>
-      )}
-    </div>
+        ) : (
+          <>
+            <div className="question-section">
+              <div className="question-count">
+                <span>Questão {currentQuestion + 1}</span>/{questions.length}
+              </div>
+              <div className="question-text">
+                {questions[currentQuestion].questionText}
+              </div>
+            </div>
+
+            <div className="answer-section">
+              {questions[currentQuestion].answerOptions.map(
+                (answerOption, index) => (
+                  <button
+                    onClick={() => handleAnswer(answerOption.isCorrect)}
+                    key={index}
+                  >
+                    {answerOption.answerText}
+                  </button>
+                )
+              )}
+            </div>
+          </>
+        )}
+      </div>
+
+    </section>
   );
 }
 
